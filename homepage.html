@@ -1,0 +1,298 @@
+<!-- Homepage -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Meta -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Title -->
+    <title>7-11 simulator</title>
+
+    <!-- Load custom font face -->
+    <link rel="stylesheet" href="stylesheets/font-face.css" />
+
+    <!-- CSS style defined by us -->
+    <link rel="stylesheet" href="stylesheets/index.css" />
+
+    <!-- jQuery, materalize, chartjs -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <!-- js file for dynamic things -->
+    <script src="scripts/index.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <!-- Navbar -->
+      <nav class="nav-center">
+        <div class="nav-wrapper">
+          <a href="#!" class="brand-logo center"></a>
+          <a href="#" data-target="mobnavitem" class="sidenav-trigger"
+            ><i class="material-icons">menu</i></a
+          >
+          <ul class="right hide-on-med-and-down icons-row" id="navitem">
+            <!-- Home -->
+            <li>
+              <div class="icon-text-container">
+                <img
+                  src="images/index.png"
+                  alt="index button"
+                  height="30"
+                  width="30"
+                />
+                <a class="home"> Home</a>
+              </div>
+            </li>
+            <!-- Practice -->
+            <li>
+              <div class="icon-text-container">
+                <img
+                  src="images/practice.png"
+                  alt="practice button"
+                  height="30"
+                  width="30"
+                />
+                <a class="practice"> Practice</a>
+              </div>
+            </li>
+            <!-- Rank -->
+            <li>
+              <div class="icon-text-container">
+                <img
+                  src="images/rank.png"
+                  alt="rank button"
+                  height="30"
+                  width="30"
+                />
+                <a class="rank"> Rank</a>
+              </div>
+            </li>
+            <!-- Login -->
+            <li>
+              <div class="icon-text-container">
+                <i class="material-icons center">person</i>
+                <a href="#loginpage" class="modal-trigger">Login</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Mobile navbar -->
+      <ul class="sidenav" id="mobnavitem">
+        <li>
+          <div class="user-view" style="padding: 16px 16px 16px 24px">
+            <div class="background grey lighten-3">
+              <!-- Better use an image instead of the grey background -->
+            </div>
+            <a><img class="circle" src="images/score.png"/></a>
+            <a><span class="black-text name" id="username">Anonymous</span></a>
+          </div>
+        </li>
+        <!-- Home -->
+        <li>
+          <a class="home"
+            ><img
+              src="images/index.png"
+              alt="index button"
+              height="20"
+              width="20"
+              style="margin-right: 32px"
+            />Home</a
+          >
+        </li>
+        <!-- Practice -->
+        <li>
+          <a class="practice"
+            ><img
+              src="images/practice.png"
+              alt="practice button"
+              height="20"
+              width="20"
+              style="margin-right: 32px"
+            />Practice</a
+          >
+        </li>
+        <!-- Rank -->
+        <li>
+          <a class="rank"
+            ><img
+              src="images/rank.png"
+              alt="rank button"
+              height="20"
+              width="20"
+              style="margin-right: 32px"
+            />Rank</a
+          >
+        </li>
+        <li><div class="divider"></div></li>
+        <li><a class="subheader">Account</a></li>
+        <!-- Login -->
+        <li>
+          <a href="#loginpage" class="modal-trigger"
+            ><i class="material-icons">person</i>Login</a
+          >
+        </li>
+      </ul>
+    </header>
+    <div id="particle-canvas"></div>
+    <div class="particle-canvas-container">
+      <br />
+      <!-- Group icon -->
+      <div class="center">
+        <img src="images/logo.png" alt="logo area" height="150" width="250" />
+      </div>
+      <br />
+
+      <!-- Main content -->
+      <div class="container" id="content"></div>
+
+      <!-- Footer -->
+      <footer>
+        &copy: Copyright the Group42
+      </footer>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginpage" class="modal">
+      <div class="modal-content">
+        <div style="padding:0px 100px">
+          <h3 style="color:black" class="center-align">Login</h3>
+        </div>
+        <div class="row">
+          <form class="col s12">
+            <!-- Login ID -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input
+                  id="name"
+                  type="text"
+                  class="validate"
+                  autocomplete="off"
+                />
+                <label for="name" id="labelname">Login ID</label>
+              </div>
+            </div>
+            <!-- Password -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input
+                  id="password"
+                  type="password"
+                  class="validate"
+                  autocomplete="off"
+                />
+                <label for="password" id="labelpassword">Password</label>
+              </div>
+            </div>
+            <!-- Submit -->
+            <button
+              class="btn waves-effect red darken-2"
+              type="button"
+              name="action"
+              id="loginButton"
+            >
+              Submit
+              <i class="material-icons">arrow_forward</i>
+            </button>
+            <!-- New account -->
+            <a
+              class="waves-effect red darken-2 btn modal-trigger"
+              href="#newaccount"
+              >New account? <i class="material-icons">add</i></a
+            >
+          </form>
+        </div>
+      </div>
+      <!-- Close -->
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Close</a
+        >
+      </div>
+    </div>
+
+    <!-- Account create modal -->
+    <div id="newaccount" class="modal z-depth-5">
+      <div class="modal-content">
+        <h4>Create an account</h4>
+        <div>
+          <div class="row">
+            <form class="col s12">
+              <!-- Login ID -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">account_circle</i>
+                  <input
+                    id="name2"
+                    type="text"
+                    class="validate"
+                    autocomplete="off"
+                  />
+                  <label for="name2" id="labelname2">Login ID</label>
+                </div>
+              </div>
+              <!-- Password -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">vpn_key</i>
+                  <input
+                    id="password2"
+                    type="password"
+                    class="validate"
+                    autocomplete="off"
+                  />
+                  <label for="password2" id="labelpassword2">Password</label>
+                </div>
+              </div>
+              <!-- Submit -->
+              <button
+                class="btn waves-effect red darken-2"
+                type="button"
+                name="action"
+                id="createAccount"
+              >
+                Submit
+                <i class="material-icons">arrow_forward</i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Close -->
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Close</a
+        >
+      </div>
+    </div>
+
+    <!-- Message modal -->
+    <div id="messagemodal" class="modal z-depth-5">
+      <div class="modal-content">
+        <h5 id="message"></h5>
+      </div>
+      <div class="modal-footer">
+        <!-- Close -->
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Close</a
+        >
+      </div>
+    </div>
+
+  </body>
+</html>

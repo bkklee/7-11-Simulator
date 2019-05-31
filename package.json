@@ -1,0 +1,23 @@
+{
+  "name": "7-11-simulator",
+  "version": "1.0.0",
+  "description": "[_7-11-Simulator_] is a web application that simulate 7-11 with great user-friendliness.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leecat2001a/7-11-Simulator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leecat2001a/7-11-Simulator/issues"
+  },
+  "homepage": "https://github.com/leecat2001a/7-11-Simulator#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
