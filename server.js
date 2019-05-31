@@ -1,7 +1,7 @@
 //[Package]
 //Express
 const express = require("express");
-/*//Mongoose
+//Mongoose
 var mongoose = require("mongoose");
 //Body-parser
 var bodyParser = require("body-parser");
@@ -13,22 +13,18 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 //Session
 var session = require("express-session");
-//Random-words
-var randomWords = require("random-words");
-//Rword
-var genRandomWords = require("rword").rword.generate;
 
 //[Connect database]
 mongoose.connect(
-  "mongodb+srv://csci3100:csci3100@cluster0-48aht.mongodb.net/db1"
-);*/
+  "mongodb+srv://simulator:simulator@cluster0-eksdr.mongodb.net/db1"
+);
 
 //[Init]
 const PORT = process.env.PORT || 5000;
 
 var app = express();
-/*app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());*/
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 /*
 //[Schema]
@@ -719,14 +715,10 @@ app.post("/updatekeystroke", function(req, res) {
 });*/
 
 //Homepage
-/*app.get("/", function(req, res) {
+app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname + "/homepage.html"));
-});*/
-
-/*app.use("/", express.static(__dirname + "/"));*/
-
-app.all("/", function(req, res){
-  res.send("Hello world");
 });
+
+app.use("/", express.static(__dirname + "/"));
 
 app.listen(PORT);
