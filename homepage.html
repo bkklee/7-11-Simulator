@@ -9,6 +9,9 @@
     <!-- Title -->
     <title>7-11 Simulator</title>
 
+    <!-- CSS style defined by us -->
+    <link rel="stylesheet" href="stylesheets/index.css" />
+
     <!-- jQuery, materalize, chartjs -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link
@@ -28,7 +31,7 @@
   <body>
     <header>
       <!-- Navbar -->
-      <nav class="nav-center">
+      <nav class="nav-center" style="background-color: red">
         <div class="nav-wrapper">
           <a href="#!" class="brand-logo center"></a>
           <a href="#" data-target="mobnavitem" class="sidenav-trigger"
@@ -44,7 +47,7 @@
             <!-- Backend -->
             <li>
               <div class="icon-text-container">
-                <a class="practice"><i class="material-icons left">drafts</i>後台</a>
+                <a class="backend"><i class="material-icons left">drafts</i>後台</a>
               </div>
             </li>
             <!-- Login -->
@@ -62,10 +65,8 @@
         <li>
           <div class="user-view" style="padding: 16px 16px 16px 24px">
             <div class="background grey lighten-3">
-              <!-- Better use an image instead of the grey background -->
             </div>
-            <a><img class="circle" src="images/score.png"/></a>
-            <a><span class="black-text name" id="username">Anonymous</span></a>
+            <a><span class="black-text name" id="username">未登入</span></a>
           </div>
         </li>
         <!-- Home  -->
@@ -74,39 +75,38 @@
         </li>
         <!-- Backend -->
         <li>
-            <a class="practice"><i class="material-icons left">drafts</i>後台</a>
+            <a class="backend"><i class="material-icons left">drafts</i>後台</a>
         </li>
         <li><div class="divider"></div></li>
-        <li><a class="subheader">Account</a></li>
+        <li><a class="subheader">帳號</a></li>
         <!-- Login -->
         <li>
             <a href="#loginpage" class="modal-trigger"><i class="material-icons left">person</i>登入</a>
         </li>
       </ul>
     </header>
-    <div id="particle-canvas"></div>
-    <div class="particle-canvas-container">
-      <br />
-      <!-- Group icon -->
-      <div class="center">
-        <img src="images/logo.png" alt="logo area" height="150" width="250" />
-      </div>
-      <br />
 
-      <!-- Main content -->
-      <div class="container" id="content"></div>
-
-      <!-- Footer -->
-      <footer>
-        I am footer
-      </footer>
+    <!-- Group icon -->
+    <br>
+    <div class="center">
+      <img src="images/logo.png" height="100" width="100">
     </div>
+    <br>
+
+    <!-- Main content -->
+    <div class="container" id="content"></div>
+
+    <!-- Footer -->
+    <br>
+    <footer class="center-align">
+      © 2019 7-11 Simulator
+    </footer>
 
     <!-- Login Page -->
     <div id="loginpage" class="modal">
       <div class="modal-content">
         <div style="padding:0px 100px">
-          <h3 style="color:black" class="center-align">Login</h3>
+          <h3 style="color:black" class="center-align">登入</h3>
         </div>
         <div class="row">
           <form class="col s12">
@@ -120,7 +120,7 @@
                   class="validate"
                   autocomplete="off"
                 />
-                <label for="name" id="labelname">Login ID</label>
+                <label for="name" id="labelname">帳號</label>
               </div>
             </div>
             <!-- Password -->
@@ -133,7 +133,7 @@
                   class="validate"
                   autocomplete="off"
                 />
-                <label for="password" id="labelpassword">Password</label>
+                <label for="password" id="labelpassword">密碼</label>
               </div>
             </div>
             <!-- Submit -->
@@ -143,14 +143,14 @@
               name="action"
               id="loginButton"
             >
-              Submit
-              <i class="material-icons">arrow_forward</i>
+              登入
+              <i class="material-icons left">arrow_forward</i>
             </button>
             <!-- New account -->
             <a
               class="waves-effect red darken-2 btn modal-trigger"
               href="#newaccount"
-              >New account? <i class="material-icons">add</i></a
+              >新帳號 <i class="material-icons left">add</i></a
             >
           </form>
         </div>
@@ -158,7 +158,7 @@
       <!-- Close -->
       <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-green btn-flat"
-          >Close</a
+          >關閉</a
         >
       </div>
     </div>
@@ -166,7 +166,7 @@
     <!-- Account create modal -->
     <div id="newaccount" class="modal z-depth-5">
       <div class="modal-content">
-        <h4>Create an account</h4>
+        <h4>新帳號</h4>
         <div>
           <div class="row">
             <form class="col s12">
@@ -180,7 +180,7 @@
                     class="validate"
                     autocomplete="off"
                   />
-                  <label for="name2" id="labelname2">Login ID</label>
+                  <label for="name2" id="labelname2">帳號</label>
                 </div>
               </div>
               <!-- Password -->
@@ -193,7 +193,7 @@
                     class="validate"
                     autocomplete="off"
                   />
-                  <label for="password2" id="labelpassword2">Password</label>
+                  <label for="password2" id="labelpassword2">密碼</label>
                 </div>
               </div>
               <!-- Submit -->
@@ -203,8 +203,8 @@
                 name="action"
                 id="createAccount"
               >
-                Submit
-                <i class="material-icons">arrow_forward</i>
+                建立
+                <i class="material-icons left">arrow_forward</i>
               </button>
             </form>
           </div>
@@ -213,7 +213,7 @@
       <!-- Close -->
       <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-green btn-flat"
-          >Close</a
+          >關閉</a
         >
       </div>
     </div>
@@ -226,7 +226,7 @@
       <div class="modal-footer">
         <!-- Close -->
         <a href="#!" class="modal-close waves-effect waves-green btn-flat"
-          >Close</a
+          >關閉</a
         >
       </div>
     </div>

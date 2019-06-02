@@ -1,10 +1,10 @@
 $(document).ready(function() {
-  /*//Load homepage content
-  $.get("introduction.html", function(content) {
+  //Load homepage content
+  $.get("shop.html", function(content) {
     $("#content").html(content);
   });
 
-  //Check logged in
+  /*//Check logged in
   $.get("/login", function(content) {
     if (content.user != "NOT") {
       successLoginHandle(content.user);
