@@ -26,22 +26,13 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-/*
+
 //[Schema]
 //User schema
 var UserSchema = new mongoose.Schema({
   loginId: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  hit: { type: Map, of: Number },
-  typed: { type: Map, of: Number },
-  miss: { type: Map, of: Number },
-  totalHit: { type: Number },
-  totalTyped: { type: Number },
-  totalTime: { type: Number },
-  totalWord: { type: Number },
-  firstHit: { type: Number },
-  firstTyped: { type: Number },
-  firstWord: { type: Number }
+  money: { type: Number }
 });
 
 var User = mongoose.model("User", UserSchema);
@@ -50,7 +41,7 @@ var User = mongoose.model("User", UserSchema);
 app.use(
   session({
     key: "user_sid",
-    secret: "ilovecsci",
+    secret: "simulator",
     saveUninitialized: true,
     resave: true,
     cookie: {
@@ -108,106 +99,17 @@ app.post("/newAccount", function(req, res) {
   var u = new User({
     loginId: String(req.body["loginId"]),
     password: String(bcrypt.hashSync(req.body["password"])),
-    hit: {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      E: 0,
-      F: 0,
-      G: 0,
-      H: 0,
-      I: 0,
-      J: 0,
-      K: 0,
-      L: 0,
-      M: 0,
-      N: 0,
-      O: 0,
-      P: 0,
-      Q: 0,
-      R: 0,
-      S: 0,
-      T: 0,
-      U: 0,
-      V: 0,
-      W: 0,
-      X: 0,
-      Y: 0,
-      Z: 0
-    },
-    typed: {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      E: 0,
-      F: 0,
-      G: 0,
-      H: 0,
-      I: 0,
-      J: 0,
-      K: 0,
-      L: 0,
-      M: 0,
-      N: 0,
-      O: 0,
-      P: 0,
-      Q: 0,
-      R: 0,
-      S: 0,
-      T: 0,
-      U: 0,
-      V: 0,
-      W: 0,
-      X: 0,
-      Y: 0,
-      Z: 0
-    },
-    miss: {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      E: 0,
-      F: 0,
-      G: 0,
-      H: 0,
-      I: 0,
-      J: 0,
-      K: 0,
-      L: 0,
-      M: 0,
-      N: 0,
-      O: 0,
-      P: 0,
-      Q: 0,
-      R: 0,
-      S: 0,
-      T: 0,
-      U: 0,
-      V: 0,
-      W: 0,
-      X: 0,
-      Y: 0,
-      Z: 0
-    },
-    totalHit: 0,
-    totalTyped: 0,
-    totalTime: 1,
-    totalWord: 0,
-    firstTyped: 0,
-    firstHit: 0,
-    firstWord: 0
+    money: 0
   });
   u.save(function(err) {
     if (err) {
       res.send(err.errmsg);
     } else {
-      res.send("Account created! Login Id: " + req.body["loginId"]);
+      res.send("成功註冊! 你的帳號為: " + req.body["loginId"]);
     }
   });
 });
+
 
 //Login
 app.post("/checkUser", function(req, res) {
@@ -235,7 +137,7 @@ app.post("/checkUser", function(req, res) {
   );
 });
 
-//Get user profile
+/*//Get user profile
 app.get("/userstat", function(req, res) {
   if (req.session.user && req.cookies.user_sid) {
     User.findOne({ loginId: req.session.user }, function(err, result) {
