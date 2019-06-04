@@ -50,6 +50,7 @@ function successLogoutHandle() {
   //Direct to home page
   $.get("shop.html", function(content) {
     $("#content").html(content);
+    $.getScript("/scripts/loadshop.js");
   });
 }
 
@@ -57,6 +58,7 @@ $(document).ready(function() {
   //Load homepage content
   $.get("shop.html", function(content) {
     $("#content").html(content);
+    $.getScript("/scripts/loadshop.js");
     $.getScript("/scripts/shop.js");
   });
 
@@ -85,6 +87,7 @@ $(document).ready(function() {
   $(".home").click(function() {
     $.get("shop.html", function(content) {
       $("#content").html(content);
+      $.getScript("/scripts/loadshop.js");
     });
   });
 
