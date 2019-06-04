@@ -57,6 +57,7 @@ $(document).ready(function() {
   //Load homepage content
   $.get("shop.html", function(content) {
     $("#content").html(content);
+    $.getScript("/scripts/shop.js");
   });
 
   //Check logged in
@@ -78,7 +79,6 @@ $(document).ready(function() {
   $(".backend").click(function() {
     $.get("backend.html", function(content) {
       $("#content").html(content);
-      //$.getScript("/scripts/practice.js");
     });
   });
 
