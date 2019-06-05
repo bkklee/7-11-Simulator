@@ -10,24 +10,38 @@ var $shop = $('<div><span>◼</span><span>◼</span><span>◼</span><span>◼</s
 
 var shopSize = 8;
 
-var itemList = [{item: "▤", pos: [1,1]}, {item: "▤", pos: [2,1]}, {item: "▤", pos: [3,1]}];
+var goodsList = [{name: "三文治", price: 10.2, number: 2}, {name: "水", price: 5.2, number: 3}, {name: "薯片", price: 6.2, number: 4}];
 
 //UI
-itemList.forEach(function(item){
-	$shop.find("span").eq(item.pos[0]*shopSize+item.pos[1]).html(item.item).addClass("shelf");
+var itemList, money, customers;
+
+$.get("/shopDetails", function(result){
+	itemList = result.itemList;
+	money = result.money;
+	customers = result.customers;
+
+	itemList.forEach(function(item){
+		if(item.item == "▤"){
+			$shop.find("span").eq(item.pos[0]*shopSize+item.pos[1]).html(item.item).addClass("shelf");
+		}else{
+			$shop.find("span").eq(item.pos[0]*shopSize+item.pos[1]).html(item.item);
+		}
+	});
+
+	goodsList.forEach(function(goods){
+		var tmp = '<li class="collection-item avatar"><i class="material-icons circle">folder</i>'+
+	      		  '<span class="title">'+goods.name+'</span>'+
+	      		  '<p>$'+goods.price+'</p>'+
+	      		  '<a class="secondary-content red-text">尚餘 '+goods.number+'</a></li>';
+	    $("#goods").append(tmp);
+	});
+
+	$("#myshop").html($shop);
+	$("#money").html(money);
+	$("#customers").html(customers);
+
+	$(".shelf").click(function(){
+		$(".modal").modal();
+		$("#shelfmodal").modal("open");
+	});
 });
-
-$shop.find("span").eq(41).html("▣");
-$shop.find("span").eq(42).html("▣");
-$shop.find("span").eq(62).html("◪");
-
-$("#myshop").html($shop);
-
-//Shop related js
-$(".shelf").click(function(){
-	$(".modal").modal();
-	$("#shelfmodal").modal("open");
-});
-
-var jobsList = [];
-var customersList = [];

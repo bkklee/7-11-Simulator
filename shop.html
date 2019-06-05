@@ -3,10 +3,10 @@
 
 <div class="row">
 	<div class="col s2 offset-s3">
-		<i class="material-icons left" style="margin: 0px">attach_money</i><span>: 999K</span>
+		<i class="material-icons left" style="margin: 0px">attach_money</i><span id="money"></span>
 	</div>
 	<div class="col s2 offset-s2">
-		<i class="material-icons left" style="margin: 0px">person</i><span>: 123K</span>
+		<i class="material-icons left" style="margin: 0px">person</i><span id="customers"></span>
 	</div>
 </div>
 
@@ -15,39 +15,11 @@
 
 </div>
 
-<!-- Message modal -->
+<!-- Shelf modal -->
 <div id="shelfmodal" class="modal z-depth-5">
   <div class="modal-content">
   	<h5>貨架</h5>
-	 <ul class="collection">
-	    <li class="collection-item avatar">
-	      <i class="material-icons circle">folder</i>
-	      <span class="title">三文治</span>
-	      <p>$10.2 
-	      </p>
-	      <a class="secondary-content red-text">尚餘 2</a>
-	    </li>
-	    <li class="collection-item avatar">
-	      <i class="material-icons circle">folder</i>
-	      <span class="title">三文治</span>
-	      <p>$10.2 
-	      </p>
-	      <a class="secondary-content red-text">尚餘 2</a>
-	    </li>
-	    <li class="collection-item avatar">
-	      <i class="material-icons circle">folder</i>
-	      <span class="title">三文治</span>
-	      <p>$10.2 
-	      </p>
-	      <a class="secondary-content red-text">尚餘 2</a>
-	    </li>
-	    <li class="collection-item avatar">
-	      <i class="material-icons circle">folder</i>
-	      <span class="title">三文治</span>
-	      <p>$10.2 
-	      </p>
-	      <a class="secondary-content red-text">尚餘 2</a>
-	    </li>
+	 <ul class="collection" id="goods">
 	  </ul>
   </div>
   <div class="modal-footer">

@@ -32,7 +32,9 @@ app.use(cookieParser());
 var UserSchema = new mongoose.Schema({
   loginId: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  money: { type: Number }
+  itemList: [mongoose.Schema.Types.Mixed],
+  money: { type: Number },
+  customers: { type: Number }
 });
 
 var User = mongoose.model("User", UserSchema);
@@ -99,7 +101,9 @@ app.post("/newAccount", function(req, res) {
   var u = new User({
     loginId: String(req.body["loginId"]),
     password: String(bcrypt.hashSync(req.body["password"])),
-    money: 0
+    itemList: [{item: "▤", pos: [1,1]}, {item: "▤", pos: [2,1]}, {item: "▤", pos: [3,1]}, {item: "▣", pos: [5,1]}, {item: "◪", pos: [7,6]}],
+    money: 0,
+    customers: 0
   });
   u.save(function(err) {
     if (err) {
@@ -137,159 +141,21 @@ app.post("/checkUser", function(req, res) {
   );
 });
 
-/*//Get user profile
-app.get("/userstat", function(req, res) {
-  if (req.session.user && req.cookies.user_sid) {
-    User.findOne({ loginId: req.session.user }, function(err, result) {
-      res.json({
-        name: result.loginId,
-        hit: result.hit,
-        typed: result.typed,
-        totalHit: result.totalHit,
-        totalTyped: result.totalTyped,
-        totalTime: result.totalTime,
-        totalWord: result.totalWord,
-        firstHit: result.firstHit,
-        firstTyped: result.firstTyped,
-        firstWord: result.firstWord
-      });
+app.get("/shopDetails", function(req, res){
+  if(req.session.user && req.cookies.user_sid){
+    User.findOne({
+      loginId: req.session.user
+    }, function(err, result){
+      var item = {itemList: result.itemList, money: result.money, customers: result.customers};
+      res.json(item);
     });
-  } else {
-    res.send("Error");
+  }else{
+    var item = {itemList: [{item: "▤", pos: [1,1]}, {item: "▤", pos: [2,1]}, {item: "▤", pos: [3,1]}, {item: "▣", pos: [5,1]}, {item: "◪", pos: [7,6]}], money: 0, customers: 0};
+    res.json(item);
   }
 });
 
-//Get hit ranking
-app.get("/rankinghit", function(req, res) {
-  var tmp = "";
-  var count = 1;
-  User.find()
-    .sort({ totalHit: -1 })
-    .limit(10)
-    .exec(function(err, results) {
-      results.forEach(function(element) {
-        tmp +=
-          "<tr><td>" +
-          count +
-          "</td><td>" +
-          element.loginId +
-          "</td><td>" +
-          element.totalHit +
-          "</td></tr>";
-        count += 1;
-      });
-      res.send(tmp);
-    });
-});
-
-//Get CPM ranking
-app.get("/rankingcpm", function(req, res) {
-  var tmp = "";
-  var count = 1;
-  User.aggregate()
-    .project({
-      loginId: "$loginId",
-      CPM: {
-        $divide: [{ $subtract: ["$totalTyped", "$firstTyped"] }, "$totalTime"]
-      }
-    })
-    .sort({ CPM: -1 })
-    .limit(10)
-    .exec(function(err, results) {
-      results.forEach(function(element) {
-        tmp +=
-          "<tr><td>" +
-          count +
-          "</td><td>" +
-          element.loginId +
-          "</td><td>" +
-          Math.round(element.CPM * 1000 * 60) +
-          "</td></tr>";
-        count += 1;
-      });
-      res.send(tmp);
-    });
-});
-
-//Get WPM ranking
-app.get("/rankingwpm", function(req, res) {
-  var tmp = "";
-  var count = 1;
-  User.aggregate()
-    .project({
-      loginId: "$loginId",
-      WPM: {
-        $divide: [{ $subtract: ["$totalWord", "$firstWord"] }, "$totalTime"]
-      }
-    })
-    .sort({ WPM: -1 })
-    .limit(10)
-    .exec(function(err, results) {
-      results.forEach(function(element) {
-        tmp +=
-          "<tr><td>" +
-          count +
-          "</td><td>" +
-          element.loginId +
-          "</td><td>" +
-          Math.round(element.WPM * 1000 * 60) +
-          "</td></tr>";
-        count += 1;
-      });
-      res.send(tmp);
-    });
-});
-
-//Get score ranking
-app.get("/rankingscore", function(req, res) {
-  var tmp = "";
-  var count = 1;
-  User.aggregate()
-    .project({
-      loginId: "$loginId",
-      score: {
-        $divide: [
-          {
-            $subtract: [
-              { $subtract: ["$totalHit", "$firstHit"] },
-              {
-                $multiply: [
-                  3,
-                  {
-                    $subtract: [
-                      { $subtract: ["$totalTyped", "$totalHit"] },
-                      { $subtract: ["$firstTyped", "$firstHit"] }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          "$totalTime"
-        ]
-      }
-    })
-    .sort({ score: -1 })
-    .limit(10)
-    .exec(function(err, results) {
-      if (err) {
-        res.send(err.errmsg);
-      } else {
-        results.forEach(function(element) {
-          tmp +=
-            "<tr><td>" +
-            count +
-            "</td><td>" +
-            element.loginId +
-            "</td><td>" +
-            Math.round(element.score * 10000) +
-            "</td></tr>";
-          count += 1;
-        });
-        res.send(tmp);
-      }
-    });
-});
+/*
 
 //Update user information
 app.post("/changeuser", function(req, res) {
@@ -412,209 +278,7 @@ app.get("/newword", function(req, res) {
   }
 });
 
-//Handle user mistyped word
-app.post("/newmiss", function(req, res) {
-  if (req.session.user && req.cookies.user_sid) {
-    User.update(
-      { loginId: req.session.user },
-      {
-        $inc: {
-          "miss.A": req.body["miss[A]"],
-          "miss.B": req.body["miss[B]"],
-          "miss.C": req.body["miss[C]"],
-          "miss.D": req.body["miss[D]"],
-          "miss.E": req.body["miss[E]"],
-          "miss.F": req.body["miss[F]"],
-          "miss.G": req.body["miss[G]"],
-          "miss.H": req.body["miss[H]"],
-          "miss.I": req.body["miss[I]"],
-          "miss.J": req.body["miss[J]"],
-          "miss.K": req.body["miss[K]"],
-          "miss.L": req.body["miss[L]"],
-          "miss.M": req.body["miss[M]"],
-          "miss.N": req.body["miss[N]"],
-          "miss.O": req.body["miss[O]"],
-          "miss.P": req.body["miss[P]"],
-          "miss.Q": req.body["miss[Q]"],
-          "miss.R": req.body["miss[R]"],
-          "miss.S": req.body["miss[S]"],
-          "miss.T": req.body["miss[T]"],
-          "miss.U": req.body["miss[U]"],
-          "miss.V": req.body["miss[V]"],
-          "miss.W": req.body["miss[W]"],
-          "miss.X": req.body["miss[X]"],
-          "miss.Y": req.body["miss[Y]"],
-          "miss.Z": req.body["miss[Z]"]
-        }
-      },
-      function(err) {
-        if (err) {
-          res.send(err.errmsg);
-        } else {
-          res.send("Done!");
-        }
-      }
-    );
-  } else {
-    //Guest
-    res.send("Guest");
-  }
-});
-
-//Update keystroke
-app.post("/updatekeystroke", function(req, res) {
-  if (req.session.user && req.cookies.user_sid) {
-    if (req.body["time"] == 0) {
-      User.update(
-        { loginId: req.session.user },
-        {
-          $inc: {
-            "hit.A": req.body["hit[A]"],
-            "hit.B": req.body["hit[B]"],
-            "hit.C": req.body["hit[C]"],
-            "hit.D": req.body["hit[D]"],
-            "hit.E": req.body["hit[E]"],
-            "hit.F": req.body["hit[F]"],
-            "hit.G": req.body["hit[G]"],
-            "hit.H": req.body["hit[H]"],
-            "hit.I": req.body["hit[I]"],
-            "hit.J": req.body["hit[J]"],
-            "hit.K": req.body["hit[K]"],
-            "hit.L": req.body["hit[L]"],
-            "hit.M": req.body["hit[M]"],
-            "hit.N": req.body["hit[N]"],
-            "hit.O": req.body["hit[O]"],
-            "hit.P": req.body["hit[P]"],
-            "hit.Q": req.body["hit[Q]"],
-            "hit.R": req.body["hit[R]"],
-            "hit.S": req.body["hit[S]"],
-            "hit.T": req.body["hit[T]"],
-            "hit.U": req.body["hit[U]"],
-            "hit.V": req.body["hit[V]"],
-            "hit.W": req.body["hit[W]"],
-            "hit.X": req.body["hit[X]"],
-            "hit.Y": req.body["hit[Y]"],
-            "hit.Z": req.body["hit[Z]"],
-            "typed.A": req.body["total[A]"],
-            "typed.B": req.body["total[B]"],
-            "typed.C": req.body["total[C]"],
-            "typed.D": req.body["total[D]"],
-            "typed.E": req.body["total[E]"],
-            "typed.F": req.body["total[F]"],
-            "typed.G": req.body["total[G]"],
-            "typed.H": req.body["total[H]"],
-            "typed.I": req.body["total[I]"],
-            "typed.J": req.body["total[J]"],
-            "typed.K": req.body["total[K]"],
-            "typed.L": req.body["total[L]"],
-            "typed.M": req.body["total[M]"],
-            "typed.N": req.body["total[N]"],
-            "typed.O": req.body["total[O]"],
-            "typed.P": req.body["total[P]"],
-            "typed.Q": req.body["total[Q]"],
-            "typed.R": req.body["total[R]"],
-            "typed.S": req.body["total[S]"],
-            "typed.T": req.body["total[T]"],
-            "typed.U": req.body["total[U]"],
-            "typed.V": req.body["total[V]"],
-            "typed.W": req.body["total[W]"],
-            "typed.X": req.body["total[X]"],
-            "typed.Y": req.body["total[Y]"],
-            "typed.Z": req.body["total[Z]"],
-            totalHit: req.body["hitnum"],
-            totalTyped: req.body["totalnum"],
-            totalTime: req.body["time"],
-            totalWord: 1,
-            firstTyped: req.body["totalnum"],
-            firstHit: req.body["hitnum"],
-            firstWord: 1
-          }
-        },
-        function(err) {
-          if (err) {
-            res.send(err.errmsg);
-          } else {
-            res.send("Done!");
-          }
-        }
-      );
-    } else {
-      User.update(
-        { loginId: req.session.user },
-        {
-          $inc: {
-            "hit.A": req.body["hit[A]"],
-            "hit.B": req.body["hit[B]"],
-            "hit.C": req.body["hit[C]"],
-            "hit.D": req.body["hit[D]"],
-            "hit.E": req.body["hit[E]"],
-            "hit.F": req.body["hit[F]"],
-            "hit.G": req.body["hit[G]"],
-            "hit.H": req.body["hit[H]"],
-            "hit.I": req.body["hit[I]"],
-            "hit.J": req.body["hit[J]"],
-            "hit.K": req.body["hit[K]"],
-            "hit.L": req.body["hit[L]"],
-            "hit.M": req.body["hit[M]"],
-            "hit.N": req.body["hit[N]"],
-            "hit.O": req.body["hit[O]"],
-            "hit.P": req.body["hit[P]"],
-            "hit.Q": req.body["hit[Q]"],
-            "hit.R": req.body["hit[R]"],
-            "hit.S": req.body["hit[S]"],
-            "hit.T": req.body["hit[T]"],
-            "hit.U": req.body["hit[U]"],
-            "hit.V": req.body["hit[V]"],
-            "hit.W": req.body["hit[W]"],
-            "hit.X": req.body["hit[X]"],
-            "hit.Y": req.body["hit[Y]"],
-            "hit.Z": req.body["hit[Z]"],
-            "typed.A": req.body["total[A]"],
-            "typed.B": req.body["total[B]"],
-            "typed.C": req.body["total[C]"],
-            "typed.D": req.body["total[D]"],
-            "typed.E": req.body["total[E]"],
-            "typed.F": req.body["total[F]"],
-            "typed.G": req.body["total[G]"],
-            "typed.H": req.body["total[H]"],
-            "typed.I": req.body["total[I]"],
-            "typed.J": req.body["total[J]"],
-            "typed.K": req.body["total[K]"],
-            "typed.L": req.body["total[L]"],
-            "typed.M": req.body["total[M]"],
-            "typed.N": req.body["total[N]"],
-            "typed.O": req.body["total[O]"],
-            "typed.P": req.body["total[P]"],
-            "typed.Q": req.body["total[Q]"],
-            "typed.R": req.body["total[R]"],
-            "typed.S": req.body["total[S]"],
-            "typed.T": req.body["total[T]"],
-            "typed.U": req.body["total[U]"],
-            "typed.V": req.body["total[V]"],
-            "typed.W": req.body["total[W]"],
-            "typed.X": req.body["total[X]"],
-            "typed.Y": req.body["total[Y]"],
-            "typed.Z": req.body["total[Z]"],
-            totalHit: req.body["hitnum"],
-            totalTyped: req.body["totalnum"],
-            totalTime: req.body["time"],
-            totalWord: 1
-          }
-        },
-        function(err) {
-          if (err) {
-            res.send(err.errmsg);
-          } else {
-            res.send("Done!");
-          }
-        }
-      );
-    }
-  } else {
-    //Guest
-    res.send("Guest");
-  }
-});*/
+*/
 
 //Homepage
 app.get("/", function(req, res) {
