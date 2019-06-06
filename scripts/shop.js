@@ -1,53 +1,11 @@
-(function() {
-  /**
-   * Decimal adjustment of a number.
-   *
-   * @param {String}  type  The type of adjustment.
-   * @param {Number}  value The number.
-   * @param {Integer} exp   The exponent (the 10 logarithm of the adjustment base).
-   * @returns {Number} The adjusted value.
-   */
-  function decimalAdjust(type, value, exp) {
-    // If the exp is undefined or zero...
-    if (typeof exp === 'undefined' || +exp === 0) {
-      return Math[type](value);
-    }
-    value = +value;
-    exp = +exp;
-    // If the value is not a number or the exp is not an integer...
-    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
-      return NaN;
-    }
-    // Shift
-    value = value.toString().split('e');
-    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
-    // Shift back
-    value = value.toString().split('e');
-    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
-  }
-
-  // Decimal round
-  if (!Math.round10) {
-    Math.round10 = function(value, exp) {
-      return decimalAdjust('round', value, exp);
-    };
-  }
-  // Decimal floor
-  if (!Math.floor10) {
-    Math.floor10 = function(value, exp) {
-      return decimalAdjust('floor', value, exp);
-    };
-  }
-  // Decimal ceil
-  if (!Math.ceil10) {
-    Math.ceil10 = function(value, exp) {
-      return decimalAdjust('ceil', value, exp);
-    };
-  }
-})();
+$.getScript("/scripts/helper.js");
 
 var jobsList = [];
 var customersList = [];
+
+//This two should get from server
+var money = 0;
+var customerNum = 0;
 
 setInterval(function() {
 	//Customer Movement
@@ -59,15 +17,20 @@ setInterval(function() {
 		}else if(customersList[i].pos[1]==2 && customersList[i].pos[0]!=5){
 			customersList[i].pos[0]++;
 		}else{
+      //Add money
+      money += goodsList[customersList[i].buy[0]].price;
+      money = Math.round10(money, -1);
+      $("#money").html(money);
+
+      //Minus item Number
+      goodsList[customersList[i].buy[0]].number--;
+      $("#goods").find("li").eq(customersList[i].buy[0]).find("a").find("span").html(goodsList[customersList[i].buy[0]].number);
+
+      //Remove from array
 			customersList.splice(i, 1); 
 			i--;
 
-			var money = Number($("#money").html());
-			money += 10.2;
-			money = Math.round10(money, -1);
-			$("#money").html(money);
-
-			var customerNum = Number($("#customers").html());
+      //Add customer number by 1
 			customerNum += 1;
 			$("#customers").html(customerNum);
 		}
@@ -76,7 +39,8 @@ setInterval(function() {
 	//New customer
 	var newCustomer = Math.random();
 	if(newCustomer>0.8){
-		customersList.push({name: "Customer", buy: ["三文治"], pos: [7,6]});
+    var customerItem = Math.floor(Math.random()*goodsList.length);
+		customersList.push({name: "Customer", buy: [customerItem], pos: [7,6]});
 	}
 
 	$newUI = $shop.clone();
@@ -89,7 +53,15 @@ setInterval(function() {
 		$(".modal").modal();
 		$("#shelfmodal").modal("open");
 	});
-
-	console.log(customersList);
 	
 }, 1000);
+
+setInterval(function() {
+  $.post("/updateGame", {
+    money: money,
+    customers: customerNum
+  }, function(msg){
+    console.log(msg);
+  });
+
+}, 60000);

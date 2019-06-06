@@ -13,12 +13,10 @@ var shopSize = 8;
 var goodsList = [{name: "三文治", price: 10.2, number: 2}, {name: "水", price: 5.2, number: 3}, {name: "薯片", price: 6.2, number: 4}];
 
 //UI
-var itemList, money, customers;
+var itemList;
 
 $.get("/shopDetails", function(result){
 	itemList = result.itemList;
-	money = result.money;
-	customers = result.customers;
 
 	itemList.forEach(function(item){
 		if(item.item == "▤"){
@@ -32,13 +30,13 @@ $.get("/shopDetails", function(result){
 		var tmp = '<li class="collection-item avatar"><i class="material-icons circle">folder</i>'+
 	      		  '<span class="title">'+goods.name+'</span>'+
 	      		  '<p>$'+goods.price+'</p>'+
-	      		  '<a class="secondary-content red-text">尚餘 '+goods.number+'</a></li>';
+	      		  '<a class="secondary-content red-text">尚餘 <span>'+goods.number+'</span></a></li>';
 	    $("#goods").append(tmp);
 	});
 
 	$("#myshop").html($shop);
 	$("#money").html(money);
-	$("#customers").html(customers);
+	$("#customers").html(customerNum);
 
 	$(".shelf").click(function(){
 		$(".modal").modal();

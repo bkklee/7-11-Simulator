@@ -155,6 +155,25 @@ app.get("/shopDetails", function(req, res){
   }
 });
 
+app.post("/updateGame", function(req, res){
+  if(req.session.user && req.cookies.user_sid){
+    User.update({loginId: req.session.user }, {
+      $set: {
+        money: req.body["money"],
+        customers: req.body["customers"]
+      }
+    }, function(err) {
+      if(err){
+        res.send(err.errmsg);
+      }else{
+        res.send("Done!");
+      }
+    });
+  }else{
+    res.send("Do nothing");
+  }
+});
+
 /*
 
 //Update user information
