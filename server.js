@@ -33,6 +33,7 @@ var UserSchema = new mongoose.Schema({
   loginId: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   itemList: [mongoose.Schema.Types.Mixed],
+  goodsList: [mongoose.Schema.Types.Mixed],
   money: { type: Number },
   customers: { type: Number }
 });
@@ -102,6 +103,7 @@ app.post("/newAccount", function(req, res) {
     loginId: String(req.body["loginId"]),
     password: String(bcrypt.hashSync(req.body["password"])),
     itemList: [{item: "▤", pos: [1,1]}, {item: "▤", pos: [2,1]}, {item: "▤", pos: [3,1]}, {item: "▣", pos: [5,1]}, {item: "◪", pos: [7,6]}],
+    goodsList: [{name: "三文治", price: 10.2, number: 2}, {name: "水", price: 5.2, number: 3}, {name: "薯片", price: 6.2, number: 4}],
     money: 0,
     customers: 0
   });
@@ -141,20 +143,25 @@ app.post("/checkUser", function(req, res) {
   );
 });
 
+//Give user's shop details
 app.get("/shopDetails", function(req, res){
   if(req.session.user && req.cookies.user_sid){
     User.findOne({
       loginId: req.session.user
     }, function(err, result){
-      var item = {itemList: result.itemList, money: result.money, customers: result.customers};
+      var item = {itemList: result.itemList, goodsList: result.goodsList, money: result.money, customers: result.customers};
       res.json(item);
     });
   }else{
-    var item = {itemList: [{item: "▤", pos: [1,1]}, {item: "▤", pos: [2,1]}, {item: "▤", pos: [3,1]}, {item: "▣", pos: [5,1]}, {item: "◪", pos: [7,6]}], money: 0, customers: 0};
+    var item = {itemList: [{item: "▤", pos: [1,1]}, {item: "▤", pos: [2,1]}, {item: "▤", pos: [3,1]}, {item: "▣", pos: [5,1]}, {item: "◪", pos: [7,6]}], 
+                goodsList: [{name: "三文治", price: 10.2, number: 2}, {name: "水", price: 5.2, number: 3}, {name: "薯片", price: 6.2, number: 4}], 
+                money: 0, 
+                customers: 0};
     res.json(item);
   }
 });
 
+//Save game
 app.post("/updateGame", function(req, res){
   if(req.session.user && req.cookies.user_sid){
     User.update({loginId: req.session.user }, {

@@ -58,8 +58,9 @@ $(document).ready(function() {
   //Load homepage content
   $.get("shop.html", function(content) {
     $("#content").html(content);
-    $.getScript("/scripts/loadshop.js");
-    $.getScript("/scripts/shop.js");
+    $.getScript("/scripts/shop.js").done(function(){
+      $.getScript("/scripts/loadshop.js");
+    });
   });
 
   //Check logged in
